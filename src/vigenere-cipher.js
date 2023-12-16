@@ -25,12 +25,12 @@ class VigenereCipheringMachine {
   }
   encrypt(message, key) {
     if (!message || !key) {
-      throw new NotImplementedError('Incorrect arguments!');
+      throw new Error('Incorrect arguments!');
     }
   }
   decrypt(encryptedMessage, key) {
     if (!encryptedMessage || !key) {
-      throw new NotImplementedError('Incorrect arguments!');
+      throw new Error('Incorrect arguments!');
     }
   }
 }
