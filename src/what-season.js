@@ -12,10 +12,10 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 function getSeason(date) {
-  if (isNaN(Date.parse(date))) {
+  if (!date) {
     return 'Unable to determine the time of year!';
   }
-  if (typeof date != 'object' || Object.keys(date).length > 0) {
+  if (typeof date != 'object' || Object.keys(date).length > 0 || isNaN(date.getTime())) {
     throw new Error("Invalid date!")
   }
   let month = date.getMonth();
