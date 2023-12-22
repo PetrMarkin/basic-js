@@ -20,85 +20,74 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 class VigenereCipheringMachine {
-  constructor (isDirectMachine = true) {
-    this.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    this.char = ':1234567890!@#$(),./|*-&^% ';
-    this.isDirect = isDirect;
+  constructor(isDirect) {
+    if (isDirect === false) {
+      this.isDirect = false;
+    } else {
+      this.isDirect = true;
+    }
   }
-  encrypt(message, key) {
-    if (!message || !key) {
+  encrypt(str, key) {
+    if (str === undefined || key === undefined) {
       throw new Error('Incorrect arguments!');
     }
-    message.toUpperCase();
-    key.toUpperCase();
-    let newKeyWord = '';
-    for (let i = 0, j = 0; i < message.length; i++) {
-      if (message[i] !== ' ') {
-        newKeyWord += key[j];
-        j += 1;
-      } else 
-      newKeyWord += ' ';
-      if (j === key.length) {
-        j = 0;
+    const arr1 = str.split('').map((el) => el.toUpperCase().charCodeAt(0));
+    const arr2 = key.split('').map((el) => el.toUpperCase().charCodeAt(0));
+    const longArr2 = [];
+    for (let i = 0; longArr2.length < arr1.length; i++) {
+      if (i === arr2.length) {
+        i = 0;
       }
+      longArr2.push(arr2[i]);
     }
-
-    let result = '';
-
-    for (let i = 0, j = 0; i < message.length; i += 1) {
-      if (this.char.indexOf(message[i]) > -1) {
-        result += message[i];
+    const arrRes = [];
+    let j = 0;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] > 64 && arr1[i] < 91) {
+        arrRes.push(((arr1[i] + longArr2[j] - 130) % 26) + 65);
         j++;
-        continue;
       } else {
-        let a = this.alphabet.indexOf(message[i]);
-        let b = this.alphabet.indexOf(newKeyWord[j]);
-        let charIndex =  a + b < this.alphabet.length ? a + b : (a + b) - this.alphabet.length;
-        result += this.alphabet[charIndex];
+        arrRes.push(arr1[i]);
       }
-      j++;
     }
-    if (!this.isDirect) {
+    const result = arrRes.map((el) => String.fromCharCode(el)).join('');
+    if (this.isDirect) {
+      return result;
+    } else {
       return result.split('').reverse().join('');
     }
-    return result;
   }
-  decrypt(encryptedMessage, key) {
-    if (!encryptedMessage || !key) {
+  decrypt(str, key) {
+    if (str === undefined || key === undefined) {
       throw new Error('Incorrect arguments!');
     }
-    message = message.toUpperCase();
-    key = key.toUpperCase();
-    let newKeyWord = '';
-    for (let i = 0, j = 0; i < message.length; i++) {
-      if (message[i] !== ' ') {
-        newKeyWord += key[j];
-        j += 1;
-      } else 
-      newKeyWord += ' ';
-      if (j === key.length) {
-        j = 0;
+    const arr1 = str.split('').map((el) => el.toUpperCase().charCodeAt(0));
+    const arr2 = key.split('').map((el) => el.toUpperCase().charCodeAt(0));
+    const longArr2 = [];
+    for (let i = 0; longArr2.length < arr1.length; i++) {
+      if (i === arr2.length) {
+        i = 0;
       }
+      longArr2.push(arr2[i]);
     }
-    let result = '';
-
-    for (let i = 0, j = 0; i < message.length; i += 1) {
-      if (this.char.indexOf(message[i]) > -1) {
-        result += message[i];
+    const arrRes = [];
+    let j = 0;
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] > 64 && arr1[i] < 91) {
+        let a = (arr1[i] - longArr2[j]) % 26;
+        if (a < 0) a = a + 26;
+        arrRes.push(a + 65);
         j++;
-        continue;
       } else {
-        let a = this.alphabet.indexOf(message[i]);
-        let b = this.alphabet.indexOf(newKeyWord[j]);
-        let charIndex = (a - b) < 0 ? a - b + this.alphabet.length : (a - b);
-        result += this.alphabet[charIndex];
+        arrRes.push(arr1[i]);
       }
-      j++;
     }
-    if (!this.isDirect) {
+    const result = arrRes.map((el) => String.fromCharCode(el)).join('');
+    if (this.isDirect) {
+      return result;
+    } else {
       return result.split('').reverse().join('');
     }
-    return result;
   }
 }
 
